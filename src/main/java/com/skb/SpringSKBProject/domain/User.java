@@ -21,6 +21,10 @@ public class User implements UserDetails {
     private String username;
 
     @NotNull
+    @Column(nullable = false, length = 40)
+    private String email;
+
+    @NotNull
     @Column(nullable = false, length = 60)
     private String password;
 
