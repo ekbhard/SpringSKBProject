@@ -40,6 +40,16 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 60)
     private String patronymic;
 
+    //flags
+
+    @NotNull
+    @Column(nullable = false, length = 60)
+    private boolean isСhecked;
+
+    @NotNull
+    @Column(nullable = false, length = 60)
+    private boolean isApproved;
+
     private boolean active;
 
     public Long getId() {
@@ -123,4 +133,15 @@ public class User implements UserDetails {
         this.patronymic = patronymic;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public boolean isСhecked() {
+        return isСhecked;
+    }
+
+    public boolean isApproved() {
+        return isApproved;
+    }
 }

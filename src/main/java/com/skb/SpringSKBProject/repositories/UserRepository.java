@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     )
 
     Long getPoints(@Param("id") Long id);
+
+    void delete(Long valueOf);
 }

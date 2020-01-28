@@ -31,8 +31,14 @@ public class RegistrationController {
             return "registration";
         }
         User userFromDb = userRepository.findByUsername(user.getUsername());
+
+        if (!userFromDb.isApproved()){
+            model.put("message","Вы заблокированы");
+            return "registration";
+        }
+
         if (userFromDb != null){
-            model.put("message","User founded");
+            model.put("message","Такой юзер уже существует");
             return "registration";
         }
         user.setActive(true);
