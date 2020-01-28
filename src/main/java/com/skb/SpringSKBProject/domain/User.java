@@ -44,11 +44,7 @@ public class User implements UserDetails {
 
     @NotNull
     @Column(nullable = false, length = 60)
-    private boolean isСhecked;
-
-    @NotNull
-    @Column(nullable = false, length = 60)
-    private boolean isApproved;
+    private boolean isApproved = false;
 
     private boolean active;
 
@@ -137,11 +133,15 @@ public class User implements UserDetails {
         return email;
     }
 
-    public boolean isСhecked() {
-        return isСhecked;
-    }
-
     public boolean isApproved() {
         return isApproved;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
     }
 }

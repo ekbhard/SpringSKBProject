@@ -4,14 +4,18 @@ import com.skb.SpringSKBProject.domain.User;
 import com.skb.SpringSKBProject.repositories.UserRepository;
 
 import com.skb.SpringSKBProject.services.EmailService;
+import com.skb.SpringSKBProject.services.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jt on 1/10/17.
@@ -23,30 +27,39 @@ public class UserController {
 
     private UserRepository userRepository;
     private EmailService emailService;
+    private UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepository, EmailService emailService) {
+    public UserController(UserRepository userRepository, EmailService emailService, UserService userService) {
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.userService = userService;
     }
 
-    @RequestMapping("/users")
-    public String redirToList(){
-        return "redirect:/users/list";
+    @GetMapping("users")
+    public String listUsers(Map<String,Object> model){
+        List<User> users = userService.getNotApprovedUsers();
+        model.put("users",users);
+        return "users";
     }
 
-    @RequestMapping({"/users/list", "/product"})
-    public String listProducts(Model model){
-        model.addAttribute("users", userRepository.findAll());
-        return "users/list";
-    }
-
-    @RequestMapping(value = "/users/delete/{id}", method = RequestMethod.DELETE)
-    public String delete(@PathVariable Long id){
+    @GetMapping(value = "deleted/{id}")
+    public String delete(@PathVariable Long id,Map<String,Object> model){
         User currentUser = userRepository.getUserById(id);
-        emailService.sendMail(currentUser.getEmail(), "Добро пожаловать", "Добро пожаловать");
-        userRepository.delete(Long.valueOf(id));
-        return "redirect:/users/list";
+//        emailService.sendMail(currentUser.getEmail(), "Запрос отклонен", "Добро пожаловать");
+        userRepository.delete(currentUser);
+        model.put("user",currentUser);
+        return "deleted";
+    }
+
+    @GetMapping(value = "accepted/{id}")
+    public String accept(@PathVariable Long id,Map<String,Object> model){
+        User currentUser = userRepository.getOne(id);
+//        emailService.sendMail(currentUser.getEmail(), "Добро пожаловать", "Добро пожаловать");
+        currentUser.setApproved(true);
+        userRepository.save(currentUser);
+        model.put("user",currentUser);
+        return "accepted";
     }
 
 }

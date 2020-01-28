@@ -25,17 +25,14 @@ public class RegistrationController {
     public String addUser(User user, Map<String,Object> model,
                           @RequestParam("surname") String surname,
                           @RequestParam("name") String name,
-                          @RequestParam("patronymic") String patronymic){
+                          @RequestParam("patronymic") String patronymic,
+                          @RequestParam("email") String email){
         if (user.getPassword().equals("") || user.getUsername().equals("")){
             model.put("message","Null login and password");
             return "registration";
         }
-        User userFromDb = userRepository.findByUsername(user.getUsername());
 
-        if (!userFromDb.isApproved()){
-            model.put("message","Вы заблокированы");
-            return "registration";
-        }
+        User userFromDb = userRepository.findByUsername(user.getUsername());
 
         if (userFromDb != null){
             model.put("message","Такой юзер уже существует");
@@ -45,6 +42,7 @@ public class RegistrationController {
         user.setName(name);
         user.setPatronymic(patronymic);
         user.setSurname(surname);
+        user.setEmail(email);
         userRepository.save(user);
         return "redirect:/registration";
     }

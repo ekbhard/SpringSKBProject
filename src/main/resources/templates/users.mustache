@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+{{#message}}
+    {{message}}
+{{/message}}
+{{#users}}
+    <div>Новый юзер : </div>
+    <div> Привет! Меня зовут : </div>
+    <strong>{{surname}} {{name}} {{patronymic}}</strong>
+    <strong>Мой ID : {{id}}</strong>
+    <div>
+        <form action="deleted/{{id}}">
+            <button>Отклонить</button>
+        </form>
+
+        <form action="accepted/{{id}}">
+            <button>Пропустить</button>
+        </form>
+    </div>
+{{/users}}
+</body>
+</html>
