@@ -43,23 +43,21 @@ public class UserController {
         return "users";
     }
 
-    @GetMapping(value = "deleted/{id}")
+    @RequestMapping(value = "deleted/{id}",method = RequestMethod.GET)
     public String delete(@PathVariable Long id,Map<String,Object> model){
         User currentUser = userRepository.getUserById(id);
-//        emailService.sendMail(currentUser.getEmail(), "Запрос отклонен", "Добро пожаловать");
+        emailService.sendMail(currentUser.getEmail(), "Запрос отклонен", "Попробуйте в следующий раз");
         userRepository.delete(currentUser);
         model.put("user",currentUser);
-        return "deleted";
+        return "redirect:/users";
     }
 
-    @GetMapping(value = "accepted/{id}")
+    @RequestMapping(value = "accepted/{id}",method = RequestMethod.GET)
     public String accept(@PathVariable Long id,Map<String,Object> model){
-        User currentUser = userRepository.getOne(id);
-//        emailService.sendMail(currentUser.getEmail(), "Добро пожаловать", "Добро пожаловать");
-        currentUser.setApproved(true);
-        userRepository.save(currentUser);
-        model.put("user",currentUser);
-        return "accepted";
+        User currentUser = userRepository.getUserById(id);
+        userService.sendProductMessage(id.toString());
+        emailService.sendMail(currentUser.getEmail(), "Запрос пропущен", "Добро пожаловать");
+        return "redirect:/users";
     }
 
 }
